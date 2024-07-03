@@ -1,28 +1,8 @@
-import environ
+
 from office365.sharepoint.client_context import ClientContext
 from office365.runtime.auth.user_credential import UserCredential
 from office365.sharepoint.files.file import File
 
-# env = environ.Env()
-# environ.Env().read_env()
-
-# import os
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
-# os.environ['sharepoint_email'] = 'ismm21103@student.nitw.ac.in'
-# os.environ['sharepoint_password'] = 'IMRANsyed@347'
-# os.environ['sharepoint_url_site'] = 'https://nitwacin.sharepoint.com/sites/myproject'
-# os.environ['sharepoint_site_name'] = 'myproject'
-# os.environ['sharepoint_doc_library'] = 'Shared Documents'
-
-
-# USERNAME = env('sharepoint_email')
-# PASSWORD = env('sharepoint_password')
-# SHAREPOINT_SITE = env('sharepoint_url_site')
-# SHAREPOINT_SITE_NAME = env('sharepoint_site_name')
-# SHAREPOINT_DOC = env('sharepoint_doc_library')
 
 USERNAME = "ismm21103@student.nitw.ac.in"
 PASSWORD = "IMRANsyed@347"
