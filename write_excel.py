@@ -8,7 +8,7 @@ class Write_Excel:
         workbook = excel.Workbooks.Open(file_path)
         sheet = workbook.Sheets(sheet_name)
         sheet.Range(cell_address1).Value = new_value1
-        sheet.Range(cell_address2).value = new_value2
+        sheet.Range(cell_address2).Value = new_value2
         workbook.Save()
         workbook.Close()
         excel.Quit()
