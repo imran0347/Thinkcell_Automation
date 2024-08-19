@@ -46,8 +46,8 @@ import pythoncom
 
 class Excel_Copy:
     def copy(self):
-        template_file = r'D:\Disney\POC\Thinkcell Automation\Thinkcell_Automation\storage\Weekly Leads Summary Templates (1).xlsb'
-        target_file = r'D:\Disney\POC\Thinkcell Automation\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb'
+        template_file = r'C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\Weekly Leads Summary Templates (1).xlsb'
+        target_file = r'C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb'
         sheet_name = 'By Marketing Channel (TEMPLATE)'
 
         excel = None  # Initialize the variable before the try block

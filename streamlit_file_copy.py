@@ -40,55 +40,66 @@ def main():
 
     # Button to execute script
     if st.button("START"):
-        download_files(folder_name, folder_dest, file_name, file_name_pattern)
+        # download_files(folder_name, folder_dest, file_name, file_name_pattern)
         update_charts()
         
     
 
-def download_files(folder_name, folder_dest, file_name, file_name_pattern):
-    def save_file(file_n, file_obj):
-        file_dir_path = PurePath(folder_dest,file_n)
-        with open(file_dir_path, 'wb') as f:
-            f.write(file_obj)
+# def download_files(folder_name, folder_dest, file_name, file_name_pattern):
+#     def save_file(file_n, file_obj):
+#         file_dir_path = PurePath(folder_dest,file_n)
+#         with open(file_dir_path, 'wb') as f:
+#             f.write(file_obj)
 
-    def get_file(file_n, folder):
-        file_obj = SharePoint().download_file(file_n,folder)
-        save_file(file_n,file_obj)
+#     def get_file(file_n, folder):
+#         file_obj = SharePoint().download_file(file_n,folder)
+#         save_file(file_n,file_obj)
 
-    def get_files(folder):
-        files_list = SharePoint()._get_files_list(folder)
-        for file in files_list:
-            get_file(file.name, folder)
+#     def get_files(folder):
+#         files_list = SharePoint()._get_files_list(folder)
+#         for file in files_list:
+#             get_file(file.name, folder)
 
-    def get_files_by_pattern(keyword, folder):
-        files_list = SharePoint()._get_files_list(folder)
-        for file in files_list:
-            if re.search(keyword, file.name):
-                get_file(file.name,folder)
+#     def get_files_by_pattern(keyword, folder):
+#         files_list = SharePoint()._get_files_list(folder)
+#         for file in files_list:
+#             if re.search(keyword, file.name):
+#                 get_file(file.name,folder)
 
-    if file_name != 'None':
-        get_file(file_name,folder_name)
-    elif file_name_pattern != 'None':
-        get_files_by_pattern(file_name_pattern, folder_name)
-    else:
-        get_files(folder_name)
+#     if file_name != 'None':
+#         get_file(file_name,folder_name)
+#     elif file_name_pattern != 'None':
+#         get_files_by_pattern(file_name_pattern, folder_name)
+#     else:
+#         get_files(folder_name)
 
-def send_message(channel_id, message):
-    client = WebClient(token='xoxb-797224974471-7437246651842-hK9DIM4fr85QOtkpJxEA6OfZ')    
-    try:
-        response = client.chat_postMessage(
-            channel= channel_id,
-            text=message)
-        assert response["message"]["text"] != None
-    except SlackApiError as e:
-        # You will get a SlackApiError if "ok" is False
-        assert e.response["ok"] is False
-        assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print(f"Got an error: {e.response['error']}")
+# def send_message(channel_id, message):
+#     client = WebClient(token='xoxb-797224974471-7437246651842-hK9DIM4fr85QOtkpJxEA6OfZ')    
+#     try:
+#         response = client.chat_postMessage(
+#             channel= channel_id,
+#             text=message)
+#         assert response["message"]["text"] != None
+#     except SlackApiError as e:
+#         # You will get a SlackApiError if "ok" is False
+#         assert e.response["ok"] is False
+#         assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
+#         print(f"Got an error: {e.response['error']}")
+
+def display_result(dataframe, chart_name):
+    last_two_col = dataframe.iloc[:-2, -2:]
+    currentMonthCol = last_two_col.iloc[:, -1].sum()
+    previousMonthCol = last_two_col.iloc[:, -2].sum()
+    percentage = ((currentMonthCol - previousMonthCol) / previousMonthCol) * 100
+    message = f"The percentage difference from last month is: {percentage:.2f}%"
+    
+    # Display result in Streamlit
+    st.write(f"### {chart_name}")
+    st.write(message)
+
 
 
 def update_charts():
-
 
     Excel_Copy().copy()
     
@@ -347,7 +358,7 @@ def update_charts():
 
     final_data_for_chart9 = pd.concat([weekly_data_for_chart9, data_for_chart9], axis=0)
 
-    final_data_for_chart9 = final_data_for_chart9.fillna("")
+    data_for_chart9 = final_data_for_chart9.fillna("")
 
     #For Chart10
 
@@ -391,7 +402,7 @@ def update_charts():
 
     weekly_data_for_chart10.columns = [weekly_data_for_chart10.columns[0]]+weekly_updated_column_names_chart10
 
-    final_data_for_chart10 = pd.concat([data_for_chart10, weekly_data_for_chart10], axis=1)
+    data_for_chart10 = pd.concat([data_for_chart10, weekly_data_for_chart10], axis=1)
 
 
     #For Chart11
@@ -457,7 +468,7 @@ def update_charts():
 
     final_data_for_chart11 = pd.concat([weekly_data_for_chart11, data_for_chart11], axis=0)
 
-    final_data_for_chart11 = final_data_for_chart11.fillna("")
+    data_for_chart11 = final_data_for_chart11.fillna("")
 
 
     #For Chart12
@@ -502,128 +513,23 @@ def update_charts():
 
     weekly_data_for_chart12.columns = [weekly_data_for_chart12.columns[0]]+weekly_updated_column_names_chart12
 
-    final_data_for_chart12 = pd.concat([data_for_chart12, weekly_data_for_chart12], axis=1)
+    data_for_chart12 = pd.concat([data_for_chart12, weekly_data_for_chart12], axis=1)
 
 
-    #Updating chart1
 
-    chart_name = "Demand Pacing - Monthly and Weekly - 1"
-    dataframe = data_for_chart1
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-    last_two_col = dataframe.iloc[:-2,-2:]
-    currentMonthCol = last_two_col.iloc[:,-1].sum()
-    previousMonthCol = last_two_col.iloc[:,-2].sum()
-    percentage = ((currentMonthCol-previousMonthCol)/previousMonthCol)*100
-    message = f"The percentage difference from last month is: {percentage}%"
-    channel_id = 'C07CNBLK2B0'
-    print(message, percentage)
+    # Loop to update all charts for using above dataframes
+    for i in range(1, 2):  # For 12 charts
+        dataframe = f"dataframe{i}"
+        chart_name = f"chart_name{i}"
+        output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
 
-    # if percentage > 0.5:
-    send_message(channel_id, message)
+        Thinkcell().update_chart(chart_name, dataframe, output_file_name)
 
-    Thinkcell().update_chart(chart_name, dataframe, output_file_name)
-    print("Chart-1 has been updated")
-    print("")
-    #Updating Chart2
+        display_result(dataframe, chart_name)
+        
+        print(f"Chart-{i} has been updated", end="\n")
 
-    chart_name2 = "Demand Pacing - Monthly and Weekly - 2"
-    dataframe2 = data_for_chart2
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name2, dataframe2, output_file_name)
-    
-    print("Chart-2 has been updated")
-    print("")
-    #Updating Chart3
-
-    chart_name3 = "Demand Pacing - Monthly and Weekly - 3"
-    dataframe3 = data_for_chart3
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name3, dataframe3, output_file_name)
-    print("Chart-3 has been updated")
-    print("")
-    #Updating Chart4
-
-    chart_name4 = "Demand Pacing - Monthly and Weekly - 4"
-    dataframe4 = data_for_chart4
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name4, dataframe4, output_file_name)
-    print("Chart-4 has been updated")
-    print("")
-    #Updating Chart5
-
-    chart_name5 = "Demand Pacing - Monthly and Weekly - 5"
-    dataframe5 = data_for_chart5
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name5, dataframe5, output_file_name)
-    print("Chart-5 has been updated")
-    print('')
-
-    #Updating Chart6
-    chart_name6 = "Demand Pacing - Monthly and Weekly - 6"
-    dataframe6 = data_for_chart6
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name6, dataframe6, output_file_name)
-    print("Chart-6 has been updated")
-    print("")
-
-    #Updating Chart7
-    chart_name7 = "Demand Pacing - Monthly and Weekly - 7"
-    dataframe7 = data_for_chart7
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name7, dataframe7, output_file_name)
-    print("Chart-7 has been updated")
-    print("")
-    #Updating Chart8
-    chart_name8 = "Demand Pacing - Monthly and Weekly - 8"
-    dataframe8 = data_for_chart8
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name8, dataframe8, output_file_name)
-    print("Chart-8 has been updated")
-    print("")
-    #Updating Chart9
-
-    chart_name9 = "Demand Pacing - Monthly and Weekly - 9"
-    dataframe9 = final_data_for_chart9
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name9, dataframe9, output_file_name)
-    print("Chart-9 has been updated")
-    print("")
-    #Updating Chart10
-
-    chart_name10 = "Demand Pacing - Monthly and Weekly - 10"
-    dataframe10 = final_data_for_chart10
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name10, dataframe10, output_file_name)
-    print("Chart-10 has been updated")
-    print("")
-
-    #Updating Chart11
-
-    chart_name11 = "Demand Pacing - Monthly and Weekly - 11"
-    dataframe11 = final_data_for_chart11
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name11, dataframe11, output_file_name)
-    print("Chart-11 has been updated")
-    print("")
-    #Updating Chart12
-
-    chart_name12 = "Demand Pacing - Monthly and Weekly - 12"
-    dataframe12 = final_data_for_chart12
-    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
-
-    Thinkcell().update_chart(chart_name12, dataframe12, output_file_name)
-    print("Chart-12 has been updated")
-    print("")
+  
     print("All Charts have been updated successfully.")
 
 

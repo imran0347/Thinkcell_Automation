@@ -20,29 +20,63 @@ import pyxlsb
 
 
 def main():
+
+    # Number of charts
+    num_charts = 12
+
+    # Default values
+    default_chart_name = "Demand Pacing - Monthly and Weekly - "
+    default_min_threshold = -10
+
+    default_max_threshold = 10
+
+    # Create lists to hold inputs
+    chart_names = []
+    min_thresholds = []
+    max_thresholds = []
+
     st.title("THINKCELL AUTOMATION")
 
-    # Define default values
+    # Additional fields section (shown only once)
+    st.subheader("Download Files: ")
+    col1, col2, col3, col4 = st.columns(4)
+
     FOLDER_NAME = "Comcast_Data"
-
     FOLDER_DEST = r"C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage"
-
     FILE_NAME = "None"
-
     FILE_NAME_PATTERN = "None"
 
-    # Create input fields with default values
-    folder_name = st.text_input("ENTER FOLDER NAME", FOLDER_NAME)
-    folder_dest = st.text_input("ENTER FOLDER DESTINATION", FOLDER_DEST)
-    file_name = st.text_input("ENTER FILE NAME (OPTIONAL)", FILE_NAME)
-    file_name_pattern = st.text_input("ENTER FILE NAME PATTERN (OPTIONAL)", FILE_NAME_PATTERN)
+    with col1:
+        folder_name = st.text_input("FOLDER_NAME", FOLDER_NAME)
+    with col2:
+        folder_dest  = st.text_input("FOLDER_DEST", FOLDER_DEST)
+    with col3:
+        file_name = st.text_input("FILE_NAME", FILE_NAME)
+    with col4:
+        file_name_pattern = st.text_input("FILE_NAME_PATTERN", FILE_NAME_PATTERN)
+
+    # Create a table-like structure for chart-specific inputs
+    st.subheader("Chart Configuration")
+    for i in range(1, num_charts + 1):
+        st.write(f"**Chart {i}**")
+        col5, col6, col7 = st.columns(3)
+        
+        with col5:
+            chart_name = st.text_input(f"Chart_{i}_Name", value=f"{default_chart_name}{i}", key=f"chart_name{i}")
+        with col6:
+            min_threshold = st.number_input(f"Min Threshold", value=default_min_threshold, step=1, format="%d", key=f"min_threshold_{i}")
+        with col7:
+            max_threshold = st.number_input(f"Max Threshold", value=default_max_threshold, step=1, format="%d", key=f"max_threshold_{i}")
+
+        chart_names.append(chart_name)
+        min_thresholds.append(min_threshold)
+        max_thresholds.append(max_threshold)
+
 
     # Button to execute script
     if st.button("START"):
-        download_files(folder_name, folder_dest, file_name, file_name_pattern)
-        update_charts()
-        
-    
+        # download_files(folder_name, folder_dest, file_name, file_name_pattern)
+        update_charts(chart_names, min_thresholds, max_thresholds)
 
 def download_files(folder_name, folder_dest, file_name, file_name_pattern):
     def save_file(file_n, file_obj):
@@ -73,15 +107,28 @@ def download_files(folder_name, folder_dest, file_name, file_name_pattern):
         get_files(folder_name)
 
 
-def update_charts():
+def display_result(dataframe, chart_name, min_thre, max_thre):
+    last_two_col = dataframe.iloc[:-2, -2:]
+    currentMonthCol = last_two_col.iloc[:, -1].sum()
+    previousMonthCol = last_two_col.iloc[:, -2].sum()
+    percentage = ((currentMonthCol - previousMonthCol) / previousMonthCol) * 100
+    message = f"The percentage difference from last month is: {percentage:.2f}%"
+    
+    # Display result in Streamlit
+    if percentage > min_thre and percentage < max_thre:
+        st.write(f"### {chart_name}")
+        st.write(message)
 
+
+
+def update_charts(chart_names, min_thresholds, max_thresholds):
 
     Excel_Copy().copy()
     
    
     #Updating Charts
     file_path = r"C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb"
-    file_name_1 = r"storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb" 
+    file_name_1 = r"C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb" 
     sheet_name_1 = 'By Marketing Channel (TEMPLATE)'
     sheet_name_2 = 'National Monthly'
     Write_Excel().close_all_excel_instances()
@@ -494,12 +541,13 @@ def update_charts():
     #Updating chart1
 
     chart_name = "Demand Pacing - Monthly and Weekly - 1"
-    dataframe = data_for_chart1
+    dataframe1 = data_for_chart1
     output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
 
-    Thinkcell().update_chart(chart_name, dataframe, output_file_name)
+    Thinkcell().update_chart(chart_name, dataframe1, output_file_name)
     print("Chart-1 has been updated")
     print("")
+
     #Updating Chart2
 
     chart_name2 = "Demand Pacing - Monthly and Weekly - 2"
@@ -507,9 +555,9 @@ def update_charts():
     output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
 
     Thinkcell().update_chart(chart_name2, dataframe2, output_file_name)
-    
     print("Chart-2 has been updated")
     print("")
+
     #Updating Chart3
 
     chart_name3 = "Demand Pacing - Monthly and Weekly - 3"
@@ -528,6 +576,7 @@ def update_charts():
     Thinkcell().update_chart(chart_name4, dataframe4, output_file_name)
     print("Chart-4 has been updated")
     print("")
+
     #Updating Chart5
 
     chart_name5 = "Demand Pacing - Monthly and Weekly - 5"
@@ -555,6 +604,7 @@ def update_charts():
     Thinkcell().update_chart(chart_name7, dataframe7, output_file_name)
     print("Chart-7 has been updated")
     print("")
+
     #Updating Chart8
     chart_name8 = "Demand Pacing - Monthly and Weekly - 8"
     dataframe8 = data_for_chart8
@@ -563,8 +613,8 @@ def update_charts():
     Thinkcell().update_chart(chart_name8, dataframe8, output_file_name)
     print("Chart-8 has been updated")
     print("")
-    #Updating Chart9
 
+    #Updating Chart9
     chart_name9 = "Demand Pacing - Monthly and Weekly - 9"
     dataframe9 = final_data_for_chart9
     output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
@@ -572,6 +622,8 @@ def update_charts():
     Thinkcell().update_chart(chart_name9, dataframe9, output_file_name)
     print("Chart-9 has been updated")
     print("")
+
+
     #Updating Chart10
 
     chart_name10 = "Demand Pacing - Monthly and Weekly - 10"
@@ -599,12 +651,18 @@ def update_charts():
 
     Thinkcell().update_chart(chart_name12, dataframe12, output_file_name)
     print("Chart-12 has been updated")
+
+    dataframes = [dataframe1, dataframe2, dataframe3, dataframe4, dataframe5, dataframe6, dataframe7, dataframe8, dataframe9, dataframe10, dataframe11, dataframe12]
+
+    for i in range(0, 8):
+        dataframe = dataframes[i]
+        chart_name = chart_names[i]
+        min_thre = min_thresholds[i]
+        max_thre = max_thresholds[i]
+        display_result(dataframe, chart_name, min_thre, max_thre)
+
     print("")
-    print("All Charts have been updated successfully.")
-
-
-
-
+    print("All Charts have been updated successfully and Results are shown on UI.")
 
 if __name__ == "__main__":
     main()

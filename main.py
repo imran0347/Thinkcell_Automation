@@ -51,8 +51,8 @@ if __name__ == "__main__":
 #Updating Charts
 
 
-file_path = r"C:\Users\imran.s\Desktop\POC Disney\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb"
-template_file_path = r"C:\Users\imran.s\Desktop\POC Disney\Thinkcell_Automation\storage\Weekly Leads Summary Templates (1).xlsb"
+file_path = r"C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb"
+template_file_path = r"C:\Users\sunil.k\Desktop\Thinkcell_Automation\storage\Weekly Leads Summary Templates (1).xlsb"
 
 wb = xw.Book(file_path)
 sht = wb.sheets['Sheet1']
