@@ -64,9 +64,9 @@ def main():
         with col5:
             chart_name = st.text_input(f"Chart_{i}_Name", value=f"{default_chart_name}{i}", key=f"chart_name{i}")
         with col6:
-            min_threshold = st.number_input(f"Min Threshold", value=default_min_threshold, step=1, format="%d", key=f"min_threshold_{i}")
+            min_threshold = st.number_input(f"Min Threshold(%)", value=default_min_threshold, step=1, format="%d", key=f"min_threshold_{i}")
         with col7:
-            max_threshold = st.number_input(f"Max Threshold", value=default_max_threshold, step=1, format="%d", key=f"max_threshold_{i}")
+            max_threshold = st.number_input(f"Max Threshold(%)", value=default_max_threshold, step=1, format="%d", key=f"max_threshold_{i}")
 
         chart_names.append(chart_name)
         min_thresholds.append(min_threshold)
@@ -115,7 +115,7 @@ def display_result(dataframe, chart_name, min_thre, max_thre):
     message = f"The percentage difference from last month is: {percentage:.2f}%"
     
     # Display result in Streamlit
-    if percentage > min_thre and percentage < max_thre:
+    if percentage < min_thre or percentage > max_thre:
         st.write(f"### {chart_name}")
         st.write(message)
 
