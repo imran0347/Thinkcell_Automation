@@ -41,11 +41,11 @@
 import win32com.client as win32
 import time
 import psutil
-
+import keyboard
 class Excel_Copy:
     def copy(self):
         template_file = r'C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\Weekly Leads Summary Templates (1).xlsb'
-        target_file = r'C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb'
+        target_file = r'C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\downloaded_file.xlsb'
         sheet_name = 'By Marketing Channel (TEMPLATE)'
 
         try:
@@ -68,7 +68,7 @@ class Excel_Copy:
             time.sleep(10)
 
             # Simulate pressing Enter key
-            import keyboard
+            
             keyboard.press_and_release('enter')
 
         except Exception as e:

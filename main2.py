@@ -110,6 +110,8 @@ def update_charts():
     df1.columns = custom_column_names_df1
     df2.columns = custom_column_names_df2
 
+    #Chart1
+
     data_for_chart1 = Builder().extract_data(df1, 'C', 'P', 20, 26)
 
     data_for_chart1 = Builder().add_row(df1,data_for_chart1,28,'C','P','D')

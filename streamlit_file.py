@@ -109,6 +109,7 @@ def update_charts():
     formated_updated_column_names = [Builder().format_date_time(d) for d in converted_updated_column_names]
 
     data_for_chart1.columns = [data_for_chart1.columns[0]]+formated_updated_column_names
+    print(data_for_chart1)
 
 
 
