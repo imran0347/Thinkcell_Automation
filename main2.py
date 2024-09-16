@@ -3,6 +3,7 @@ from thinkcellbuilder import Presentation, Template
 import pandas as pd
 from datetime import datetime
 from builder import Builder
+import requests
 from thinkcell import Thinkcell
 from write_excel import Write_Excel
 from Office365_API import SharePoint
@@ -16,62 +17,75 @@ from pathlib import PurePath
 import win32com.client as win32
 from excel_copy import Excel_Copy
 import keyboard
+import gdown
 
 def main():
     st.title("THINKCELL AUTOMATION")
 
     # Define default values
-    FOLDER_NAME = "Comcast_Data"
+    # FOLDER_NAME = "Comcast_Data"
 
     FOLDER_DEST = r"C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage"
 
-    FILE_NAME = "None"
+    # FILE_NAME = "None"
 
-    FILE_NAME_PATTERN = "None"
+    # FILE_NAME_PATTERN = "None"
 
     # Create input fields with default values
-    folder_name = st.text_input("ENTER FOLDER NAME", FOLDER_NAME)
-    folder_dest = st.text_input("ENTER FOLDER DESTINATION", FOLDER_DEST)
-    file_name = st.text_input("ENTER FILE NAME (OPTIONAL)", FILE_NAME)
-    file_name_pattern = st.text_input("ENTER FILE NAME PATTERN (OPTIONAL)", FILE_NAME_PATTERN)
+    # folder_name = st.text_input("ENTER FOLDER NAME", FOLDER_NAME)
+    # folder_dest = st.text_input("ENTER FOLDER DESTINATION", FOLDER_DEST)
+    # file_name = st.text_input("ENTER FILE NAME (OPTIONAL)", FILE_NAME)
+    # file_name_pattern = st.text_input("ENTER FILE NAME PATTERN (OPTIONAL)", FILE_NAME_PATTERN)
+
+    file_id = "https://drive.google.com/uc?id=1vyW8jnlQPUCMhPdPSLJ9sswglbEf55Nz"
+
+    file_path = st.text_input("ENTER THE FILE PATH", file_id)
 
     # Button to execute script
     if st.button("START"):
-        download_files(folder_name, folder_dest, file_name, file_name_pattern)
+        download_file_from_google_drive(file_id, FOLDER_DEST)
         update_charts()
         
     
 
-def download_files(folder_name, folder_dest, file_name, file_name_pattern):
-    def save_file(file_n, file_obj):
-        file_dir_path = PurePath(folder_dest,file_n)
-        with open(file_dir_path, 'wb') as f:
-            f.write(file_obj)
+# def download_files(folder_name, folder_dest, file_name, file_name_pattern):
+#     def save_file(file_n, file_obj):
+#         file_dir_path = PurePath(folder_dest,file_n)
+#         with open(file_dir_path, 'wb') as f:
+#             f.write(file_obj)
 
-    def get_file(file_n, folder):
-        file_obj = SharePoint().download_file(file_n,folder)
-        save_file(file_n,file_obj)
+#     def get_file(file_n, folder):
+#         file_obj = SharePoint().download_file(file_n,folder)
+#         save_file(file_n,file_obj)
 
-    def get_files(folder):
-        files_list = SharePoint()._get_files_list(folder)
-        for file in files_list:
-            get_file(file.name, folder)
+#     def get_files(folder):
+#         files_list = SharePoint()._get_files_list(folder)
+#         for file in files_list:
+#             get_file(file.name, folder)
 
-    def get_files_by_pattern(keyword, folder):
-        files_list = SharePoint()._get_files_list(folder)
-        for file in files_list:
-            if re.search(keyword, file.name):
-                get_file(file.name,folder)
+#     def get_files_by_pattern(keyword, folder):
+#         files_list = SharePoint()._get_files_list(folder)
+#         for file in files_list:
+#             if re.search(keyword, file.name):
+#                 get_file(file.name,folder)
 
-    if file_name != 'None':
-        get_file(file_name,folder_name)
-    elif file_name_pattern != 'None':
-        get_files_by_pattern(file_name_pattern, folder_name)
-    else:
-        get_files(folder_name)
+#     if file_name != 'None':
+#         get_file(file_name,folder_name)
+#     elif file_name_pattern != 'None':
+#         get_files_by_pattern(file_name_pattern, folder_name)
+#     else:
+#         get_files(folder_name)
 
-
-
+def download_file_from_google_drive(file_id, destination_folder):
+    # Construct the URL for the file
+    url = f'{file_id}'
+    
+    # Construct the path to save the file
+    destination_path = f'{destination_folder}/downloaded_file.xlsb'
+    
+    # Download the file
+    gdown.download(url, destination_path, quiet=False)
+    print(f"File downloaded and saved to {destination_path}")
 
 def update_charts():
 
@@ -80,8 +94,8 @@ def update_charts():
     
    
     #Updating Charts
-    file_path = r"C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb"
-    file_name_1 = r"storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb" 
+    file_path = r"C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\downloaded_file.xlsb"
+    file_name_1 = r"storage\downloaded_file.xlsb" 
     sheet_name_1 = 'By Marketing Channel (TEMPLATE)'
     sheet_name_2 = 'National Monthly'
     Write_Excel().close_all_excel_instances()
@@ -95,6 +109,8 @@ def update_charts():
 
     df1.columns = custom_column_names_df1
     df2.columns = custom_column_names_df2
+
+    #Chart1
 
     data_for_chart1 = Builder().extract_data(df1, 'C', 'P', 20, 26)
 

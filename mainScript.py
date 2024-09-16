@@ -17,6 +17,7 @@ from pathlib import PurePath
 import win32com.client as win32
 from excel_copy import Excel_Copy
 import keyboard
+import gdown
 
 def main():
     st.title("THINKCELL AUTOMATION")
@@ -36,13 +37,13 @@ def main():
     # file_name = st.text_input("ENTER FILE NAME (OPTIONAL)", FILE_NAME)
     # file_name_pattern = st.text_input("ENTER FILE NAME PATTERN (OPTIONAL)", FILE_NAME_PATTERN)
 
-    FILE_PATH = "Paste your file path here"
+    file_id = "https://drive.google.com/uc?id=1vyW8jnlQPUCMhPdPSLJ9sswglbEf55Nz"
 
-    file_path = st.text_input("ENTER THE FILE PATH", FILE_PATH)
+    file_path = st.text_input("ENTER THE FILE PATH", file_id)
 
     # Button to execute script
     if st.button("START"):
-        download_file_from_google_drive(file_path, FOLDER_DEST)
+        download_file_from_google_drive(file_id, FOLDER_DEST)
         update_charts()
         
     
@@ -75,15 +76,16 @@ def main():
 #     else:
 #         get_files(folder_name)
 
-def download_file_from_google_drive(drive_link, destination):
-    response = requests.get(drive_link)
-    if response.status_code == 200:
-        with open(destination, 'wb') as file:
-            file.write(response.content)
-        print(f"Downloaded to {destination}")
-    else:
-        print("Failed to download the file")
-
+def download_file_from_google_drive(file_id, destination_folder):
+    # Construct the URL for the file
+    url = f'{file_id}'
+    
+    # Construct the path to save the file
+    destination_path = f'{destination_folder}/downloaded_file.xlsb'
+    
+    # Download the file
+    gdown.download(url, destination_path, quiet=False)
+    print(f"File downloaded and saved to {destination_path}")
 
 def update_charts():
 
@@ -92,8 +94,8 @@ def update_charts():
     
    
     #Updating Charts
-    file_path = r"C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb"
-    file_name_1 = r"storage\20240528_Weekly_Leads_Summary_0525_v3.xlsb" 
+    file_path = r"C:\Users\imran.s\Desktop\POC\Thinkcell_Automation\storage\downloaded_file.xlsb"
+    file_name_1 = r"storage\downloaded_file.xlsb" 
     sheet_name_1 = 'By Marketing Channel (TEMPLATE)'
     sheet_name_2 = 'National Monthly'
     Write_Excel().close_all_excel_instances()
@@ -613,7 +615,157 @@ def update_charts():
     Thinkcell().update_chart(chart_name12, dataframe12, output_file_name)
     print("Chart-12 has been updated")
     print("")
-    print("All Charts have been updated successfully.")
+
+
+    #Updating chart13
+
+    chart_name13 = "Demand Pacing - Monthly and Weekly - 13"
+    dataframe13 = data_for_chart13
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name13, dataframe13, output_file_name)
+    print("Chart-13 has been updated")
+    print("")
+    #Updating Chart14
+
+    chart_name14 = "Demand Pacing - Monthly and Weekly - 14"
+    dataframe14 = data_for_chart14
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name14, dataframe14, output_file_name)
+    
+    print("Chart-14 has been updated")
+    print("")
+    #Updating Chart15
+
+    chart_name15 = "Demand Pacing - Monthly and Weekly - 15"
+    dataframe15 = data_for_chart15
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name15, dataframe15, output_file_name)
+    print("Chart-15 has been updated")
+    print("")
+    #Updating Chart16
+
+    chart_name16 = "Demand Pacing - Monthly and Weekly - 16"
+    dataframe16 = data_for_chart16
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name16, dataframe16, output_file_name)
+    print("Chart-16 has been updated")
+    print("")
+    #Updating Chart17
+
+    chart_name17 = "Demand Pacing - Monthly and Weekly - 17"
+    dataframe17 = data_for_chart17
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name17, dataframe17, output_file_name)
+    print("Chart-17 has been updated")
+    print('')
+
+    #Updating Chart18
+    chart_name18 = "Demand Pacing - Monthly and Weekly - 18"
+    dataframe18 = data_for_chart18
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name18, dataframe18, output_file_name)
+    print("Chart-18 has been updated")
+    print("")
+
+    #Updating Chart19
+    chart_name19 = "Demand Pacing - Monthly and Weekly - 19"
+    dataframe19 = data_for_chart19
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name19, dataframe19, output_file_name)
+    print("Chart-19 has been updated")
+    print("")
+    #Updating Chart20
+    chart_name20 = "Demand Pacing - Monthly and Weekly - 20"
+    dataframe20 = data_for_chart20
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name20, dataframe20, output_file_name)
+    print("Chart-20 has been updated")
+    print("")
+    #Updating Chart21
+
+    chart_name21 = "Demand Pacing - Monthly and Weekly - 21"
+    dataframe21 = final_data_for_chart21
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name21, dataframe21, output_file_name)
+    print("Chart-21 has been updated")
+    print("")
+    #Updating Chart22
+
+    chart_name22 = "Demand Pacing - Monthly and Weekly - 22"
+    dataframe22 = final_data_for_chart22
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name22, dataframe22, output_file_name)
+    print("Chart-22 has been updated")
+    print("")
+
+    #Updating Chart23
+
+    chart_name23 = "Demand Pacing - Monthly and Weekly - 23"
+    dataframe23 = final_data_for_chart23
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name23, dataframe23, output_file_name)
+    print("Chart-23 has been updated")
+    print("")
+    #Updating Chart24
+
+    chart_name24 = "Demand Pacing - Monthly and Weekly - 24"
+    dataframe24 = final_data_for_chart24
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name24, dataframe24, output_file_name)
+    print("Chart-24 has been updated")
+    print("")
+
+
+    #Updating Chart25
+
+    chart_name25 = "Demand Pacing - Monthly and Weekly - 25"
+    dataframe25 = final_data_for_chart25
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name25, dataframe25, output_file_name)
+    print("Chart-25 has been updated")
+    print("")
+    #Updating Chart26
+
+    chart_name26 = "Demand Pacing - Monthly and Weekly - 26"
+    dataframe26 = final_data_for_chart26
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name26, dataframe26, output_file_name)
+    print("Chart-26 has been updated")
+    print("")
+
+    #Updating Chart27
+
+    chart_name27 = "Demand Pacing - Monthly and Weekly - 27"
+    dataframe27 = final_data_for_chart27
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name27, dataframe27, output_file_name)
+    print("Chart-27 has been updated")
+    print("")
+    #Updating Chart28
+
+    chart_name28 = "Demand Pacing - Monthly and Weekly - 28"
+    dataframe28 = final_data_for_chart28
+    output_file_name = "APR Month End_Digital Performance Update - Copy_Factspan_May (2).ppttc"
+
+    Thinkcell().update_chart(chart_name28, dataframe28, output_file_name)
+    print("Chart-28 has been updated")
+    print("")
+
 
 
 
